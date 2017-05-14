@@ -1,0 +1,81 @@
+#!/usr/bin/python
+
+#%# capabilities=suggest
+#%# capabilities=autoconf
+#%# family=auto
+
+import smbus
+import sys, getopt
+import subprocess
+import os.path
+import re
+
+
+def main(argv):
+
+  # get the full name of the calling script
+  file = re.search( ".*_(.*)", sys.argv[0] )
+
+  if file:
+    value_group = file.group(1)
+
+  for opt in argv:
+    # output the configuration data
+    if opt == 'config':
+      if value_group == 'temperature':
+        print "graph_title UPS PIco Temperature"
+        print "graph_vlabel C"
+        print "graph_category sensors"
+        print "pcb_temperature.label PCB Temperature"
+
+      elif value_group == 'voltages':
+        print "graph_category sensors"
+        print "graph_title UPS PIco Voltages"
+        print "graph_vlabel V"
+        print "battery_voltage.label Battery Voltage"
+        print "raspberry_voltage.label Raspberry Pi Voltage"
+        print "external_voltage.label Input Voltage"
+
+      sys.exit()
+
+    # output the suggestions for symlink names
+    elif opt == 'suggest':
+      print "temperature"
+      print "voltages"
+      sys.exit()
+
+    # autoconf information
+    elif opt == 'autoconf':
+      print "yes"
+      sys.exit()
+
+  i2c = smbus.SMBus(1)
+
+  # otherwise output the data depending on the script symlink name
+  if value_group == 'voltages':
+    data = i2c.read_word_data(0x69, 0x08)
+    data = format(data,"02x")
+    batteryVoltage = float(data) / 100
+
+    data = i2c.read_word_data(0x69, 0x0c)
+    data = format(data,"02x")
+    externalVoltage = float(data) / 100
+
+    data = i2c.read_word_data(0x69, 0x0a)
+    data = format(data,"02x")
+    raspiVoltage = float(data) / 100
+
+    print "external_voltage.value ", externalVoltage
+    print "raspberry_voltage.value ", raspiVoltage
+    print "battery_voltage.value ", batteryVoltage
+
+  elif value_group == 'temperature':
+    data = i2c.read_byte_data(0x69, 0x1b)
+    temp = format(data,"02x")
+
+    print "pcb_temperature.value ", int(temp)
+
+  sys.exit()
+
+if __name__ == "__main__":
+  main(sys.argv[1:])
