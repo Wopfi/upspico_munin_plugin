@@ -29,8 +29,10 @@ This plugin is enabled for automatic installation by munin-node-configure so aft
 
 Either way you should end up with this additional symlinks:
 ```
-lrwxrwxrwx 1 root root 33 May 14 22:02 upspico_temperature -> /usr/share/munin/plugins/upspico_
-lrwxrwxrwx 1 root root 33 May 14 22:02 upspico_voltages -> /usr/share/munin/plugins/upspico_
+lrwxrwxrwx 1 root root 33 Jun 12 21:09 upspico_charger -> /usr/share/munin/plugins/upspico_
+lrwxrwxrwx 1 root root 33 Jun 12 21:09 upspico_input_voltage -> /usr/share/munin/plugins/upspico_
+lrwxrwxrwx 1 root root 33 Jun 12 21:09 upspico_internal_voltages -> /usr/share/munin/plugins/upspico_
+lrwxrwxrwx 1 root root 33 Jun 12 21:09 upspico_temperature -> /usr/share/munin/plugins/upspico_
 ```
 Now you just need to restart the munin-node by typing
 `sudo service munin-node restart`
