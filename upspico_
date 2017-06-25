@@ -36,7 +36,7 @@ def main(argv):
 
       elif value_group == 'internal_voltages':
         print "graph_category sensors"
-        print "graph_title UPS PIco Battery Voltage"
+        print "graph_title UPS PIco Internal Voltages"
         print "graph_vlabel V"
         print "battery_voltage.label Battery Voltage"
         print "raspberry_voltage.label Raspberry Pi Voltage"
