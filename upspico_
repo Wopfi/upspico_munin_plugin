@@ -41,11 +41,11 @@ def main(argv):
         print "battery_voltage.label Battery Voltage"
         print "raspberry_voltage.label Raspberry Pi Voltage"
 
-      elif value_group == 'charger':
-        print "graph_title UPS PIco Charger"
+      elif value_group == 'mode':
+        print "graph_title UPS PIco Mode"
         print "graph_args --base 1000 -l 0 --upper-limit 2"
         print "graph_category sensors"
-        print "charger_active.label Charger active"
+        print "battery_power.label Battery powered"
 
 
       sys.exit()
@@ -55,7 +55,7 @@ def main(argv):
       print "temperature"
       print "input_voltage"
       print "internal_voltages"
-      print "charger"
+      print "mode"
       sys.exit()
 
     # autoconf information
@@ -92,10 +92,15 @@ def main(argv):
 
     print "pcb_temperature.value ", int(temp)
 
-  elif value_group == 'charger':
-    active = i2c.read_byte_data(0x69, 0x20)
+  elif value_group == 'mode':
+    active = i2c.read_byte_data(0x69, 0x00)
 
-    print "charger_active.value ", int(active)
+    if int(active) == 1:
+      battery = 0
+    elif int(active) == 2:
+      battery = 1
+
+    print "battery_power.value ", battery
 
   sys.exit()
 
